@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract HDZ is ERC20, ERC20Burnable, Ownable {
-    uint private cap = 40_000_000_000 * 20 ** uint256(18);
+    uint private cap = 40_000_000_000 * 10 ** uint256(18);
 
     constructor(
         address initialOwner
