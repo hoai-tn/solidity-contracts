@@ -8,14 +8,14 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/extensions/AccessControlEnumerable.sol";
 import "hardhat/console.sol";
 
-contract Vault is Ownable, AccessControlEnumerable {
+contract Vault is Ownable, AccessControlEnumerable  {
     IERC20 private token; // create to upgrade new token
     uint256 public maxWithdrawAmount;
     bool public withdrawEnable;
     bytes32 public constant WITHDRAWER_ROLE = keccak256("WITHDRAWER_ROLE");
-
+    
     constructor(address initOwnerAddress) Ownable(initOwnerAddress) {
-        _grantRole(WITHDRAWER_ROLE, _msgSender());
+        _grantRole(DEFAULT_ADMIN_ROLE, initOwnerAddress);
     }
 
     function setWithdrawEnable(bool _isEnable) public onlyOwner {
@@ -31,7 +31,7 @@ contract Vault is Ownable, AccessControlEnumerable {
     }
 
     function withdraw(address _to, uint256 _amount) external onlyWithdrawer {
-        require(withdrawEnable, "With draw is not enable");
+        require(withdrawEnable, "Withdraw is not available");
         require(_amount <= maxWithdrawAmount, "Exceed maximum amount");
         token.transfer(_to, _amount);
     }
