@@ -3,9 +3,14 @@ import { promises as fs } from "fs";
 var config: any;
 
 export async function initConfig() {
-  console.log("init");
-  config = JSON.parse((await fs.readFile("../config.json")).toString());
-  return config;
+  try {
+    console.log("Initializing configuration...");
+    config = JSON.parse(await fs.readFile("./config.json", "utf-8"));
+    console.log("Configuration loaded successfully.");
+  } catch (error) {
+    console.error("Error while initializing configuration:", error);
+    throw error; // Propagate the error to the caller
+  }
 }
 
 export function getConfig() {
@@ -34,5 +39,5 @@ export function setConfig(path: string, val: string) {
 export async function updateConfig() {
   console.log("write: ", JSON.stringify(config));
 
-  return fs.writeFile("../config.json", JSON.stringify(config, null, 2));
+  return fs.writeFile("./config.json", JSON.stringify(config, null, 2));
 }
