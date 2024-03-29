@@ -1,9 +1,11 @@
 {
-    "dev": {},
-    "bsctest": {},
-    "sepolia": {
-        "HDZ": "0x3b85520B19e94DB3Fd32e8717C3A50308dd3063a",
-        "Vault": "0x8C5BeDEfD70Fc996EeC5D08407D5C02ea8c25e88"
-    },
-    "main": {}
+  "dev": {},
+  "bsctest": {},
+  "sepolia": {
+    "HDZ": "0x3b85520B19e94DB3Fd32e8717C3A50308dd3063a",
+    "Vault": "0x8C5BeDEfD70Fc996EeC5D08407D5C02ea8c25e88",
+    "USDT": "0x3457d5F96Ebb81509FF5cdd6Ce31a32489899c56",
+    "HDZCrowdsale": "0xB541f230a722Ec002BB16c980604A3E8117dd39b"
+  },
+  "main": {}
 }
