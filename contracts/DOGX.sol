@@ -1,42 +1,34 @@
 //SPDX-License-Identifier: UNLICENSED
-pragma solidity <=0.8.22;
+pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/extensions/AccessControlEnumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 interface IDogx {
-    function mint(address to, uint256 dogx_type) external returns (uint256);
+    function mint(
+        address to,
+        string memory tokenURI
+    ) external returns (uint256);
 }
 
 contract DOGX is ERC721Enumerable, Ownable, AccessControlEnumerable, IDogx {
     uint256 private _tokenIdTracker;
-    string private _url;
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    mapping(uint256 tokenID => string) private _tokenURIs;
 
-    event Mint(address to, uint256 dogx_type, uint256 tokenid);
+    event Mint(address to, string tokenURI, uint256 tokenid);
 
     constructor(
         address initOwner
     ) ERC721("Baby Boo Dogx", "DOGX") Ownable(initOwner) {
-        _grantRole(DEFAULT_ADMIN_ROLE, _msgSender);
-    }
-
-    function _baseURI()
-        internal
-        view
-        override
-        returns (string memory _newBaseURI)
-    {
-        return _url;
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
     function mint(
         address to,
-        uint256 dogx_type
+        string memory tokenURI
     ) external override returns (uint256) {
         require(
             owner() == _msgSender() || hasRole(MINTER_ROLE, _msgSender()),
@@ -45,7 +37,8 @@ contract DOGX is ERC721Enumerable, Ownable, AccessControlEnumerable, IDogx {
         _tokenIdTracker += 1;
         uint256 token_id = _tokenIdTracker;
         _mint(to, token_id);
-        emit Mint(to, dogx_type, token_id);
+        _tokenURIs[token_id] = tokenURI;
+        emit Mint(to, tokenURI, token_id);
         return token_id;
     }
 
@@ -61,8 +54,12 @@ contract DOGX is ERC721Enumerable, Ownable, AccessControlEnumerable, IDogx {
         return (ids);
     }
 
-    function setBaseUrl(string memory _newUrl) public onlyOwner {
-        _url = _newUrl;
+    // return URI token ID load img, info for tokenID
+    function tokenURI(
+        uint256 tokenId
+    ) public view override returns (string memory) {
+        require(ownerOf(tokenId) != address(0), "Token ID does not exist");
+        return _tokenURIs[tokenId];
     }
 
     function supportsInterface(

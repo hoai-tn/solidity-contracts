@@ -1,5 +1,6 @@
 //SPDX-License-Identifier: UNLICENSED
-pragma solidity <=0.8.22;
+pragma solidity ^0.8.20;
+
 
 /* is ERC165 */
 interface IERC721 {
@@ -179,7 +180,7 @@ contract ERC721 {
         return _owner;
     }
 
-    // update an operator for all NFT
+    // update an operator for all NFT of msg.sender (owner nft)
     function setApprovalForAll(address _operator, bool _approved) external {
         require(_operator != address(0), "Address is zero");
 

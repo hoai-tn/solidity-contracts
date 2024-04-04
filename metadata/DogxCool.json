@@ -1,0 +1,21 @@
+{
+    "description": "It will x10 then you buy 10 days.",
+    "external_url": "https://openseacreatures.io/3",
+    "image": "https://coral-charming-dragonfly-199.mypinata.cloud/ipfs/QmaLV7fDYYiYF8pN1jd8MANxM1mYH7RRpcZmT7SakEUAKn", 
+    "name": "Shiba Inu Cool",
+    "attributes": [
+        {
+            "trait_type": "Base",
+            "value": "Starfish"
+        },
+        {
+            "trait_type": "Eyes",
+            "value": "Big"
+        },
+        {
+            "trait_type": "Cool",
+            "value": 6,
+            "max_value": 10
+        }
+    ]
+}
