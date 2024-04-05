@@ -254,7 +254,7 @@ contract ERC721 {
         address _from,
         address _to,
         uint256 _tokenId
-    ) external payable {
+    ) public payable {
         safeTransferFrom(_from, _to, _tokenId, "");
     }
 
