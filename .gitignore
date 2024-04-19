@@ -14,5 +14,5 @@ node_modules
 /coverage.json
 
 # remix files
-./deps
+.deps
 /contracts/artifacts
