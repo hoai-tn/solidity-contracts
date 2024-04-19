@@ -108,7 +108,7 @@ describe("HDZ Crowsale contract", function () {
     // set usdt token to crowdsale
     await crowdsale.setUSDTToken(usdt);
     // buy token by USDT and check emit event
-    await expect(await crowdsale.connect(alice).byTokenByUSDT(usdtBuyToken))
+    await expect(await crowdsale.connect(alice).buyTokenByUSDT(usdtBuyToken))
       .to.emit(crowdsale, "BuyTokenByUSDT")
       .withArgs(alice.address, usdtBuyToken);
     const usdtWalletAfterAliceBuy = await usdt.balanceOf(wallet.address);
@@ -151,7 +151,7 @@ describe("HDZ Crowsale contract", function () {
     );
 
     await expect(
-      crowdsale.connect(alice).byTokenByUSDT(parseEther(0))
+      crowdsale.connect(alice).buyTokenByUSDT(parseEther(0))
     ).to.be.revertedWith("Amount is zero");
   });
 
@@ -164,7 +164,7 @@ describe("HDZ Crowsale contract", function () {
     await usdt.connect(alice).approve(crowdsale.getAddress(), parseEther(1000));
 
     await expect(
-      crowdsale.connect(alice).byTokenByUSDT(parseEther(100))
+      crowdsale.connect(alice).buyTokenByUSDT(parseEther(100))
     ).to.be.revertedWith("Insufficient account balance");
   });
 });

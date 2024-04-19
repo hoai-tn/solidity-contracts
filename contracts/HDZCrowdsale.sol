@@ -67,15 +67,18 @@ contract HDZCrowdsale is Ownable {
         emit BuyTokenByETH(msg.sender, amount);
     }
 
-    function byTokenByUSDT(uint256 USDTAmount) external {
+    function buyTokenByUSDT(uint256 USDTAmount) external {
         uint256 amount = getTokenAmountUSDT(USDTAmount);
         
+        require(
+            msg.sender.balance >= USDTAmount,
+            "Insufficient account balance"
+        );
         require(amount > 0, "Amount is zero");
         require(
             token.balanceOf(address(this)) >= amount,
             "Insufficient account balance"
         );
-
         SafeERC20.safeTransferFrom(usdtToken, msg.sender, _wallet, USDTAmount);
         SafeERC20.safeTransfer(token, msg.sender, amount);
 
