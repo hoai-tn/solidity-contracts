@@ -3,13 +3,14 @@ pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "hardhat/console.sol";
 
 interface IStaking {
     function stake(uint256 amount) external;
 
     function unStake(uint256 amount) external;
 
-    function claimReward(uint256 amount) external returns (uint256);
+    function claimReward() external;
 
     function calculateReward(address stakerAddress) external returns (uint256);
 }
@@ -42,29 +43,41 @@ contract StakingTrial is IStaking {
 
         Staker storage staker = stakers[msg.sender];
 
-        staker.reward = staker.reward;
+        staker.reward = calculateReward(msg.sender);
         staker.totalStaked = staker.totalStaked + amount;
         staker.lastStakedTime = block.timestamp;
     }
 
-    function unStake(uint256 amount) external {}
+    function unStake(uint256 amount) external {
+        Staker storage staker = stakers[msg.sender];
+        require(staker.totalStaked >= amount, "No have enough token");
+
+        staker.reward = staker.reward + calculateReward(msg.sender);
+        staker.totalStaked = staker.totalStaked - amount;
+        staker.lastStakedTime = block.timestamp;
+
+        stakingToken.safeTransfer(msg.sender, amount);
+    }
 
     function calculateReward(
         address stakerAddress
     ) public view returns (uint256) {
         Staker storage staker = stakers[stakerAddress];
         uint256 stakingTimeElapsed = block.timestamp - staker.lastStakedTime;
-
         return
             staker.totalStaked *
-            (stakingTimeElapsed / stakingDuration) *
+            (stakingDuration / stakingTimeElapsed) *
             rewardRate;
     }
 
-    function claimReward() public view returns (uint256) {
-        Staker storage staker = stakers[stakerAddress];
-        uint256 reward = calculateReward(staker.totalStaked);
+    function claimReward() public {
+        Staker storage staker = stakers[msg.sender];
+        uint256 reward = staker.reward + calculateReward(msg.sender);
+        require(reward > 0, "No reward to claim");
 
-        
+        stakingToken.safeTransfer(msg.sender, reward);
+
+        staker.reward = 0;
+        staker.lastStakedTime = block.timestamp;
     }
 }
