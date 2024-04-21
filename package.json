@@ -19,6 +19,7 @@
     "mocha": "^10.4.0"
   },
   "dependencies": {
+    "@bangnn/tea-xyz-quest": "^1.0.0",
     "@openzeppelin/contracts": "^5.0.2"
   }
 }
