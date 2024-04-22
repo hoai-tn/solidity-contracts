@@ -27,8 +27,8 @@ contract StakingTrial is IStaking {
     }
 
     mapping(address => Staker) public stakers;
-    uint256 constant rewardRate = 100;
-    uint256 public constant stakingDuration = 3 minutes;
+    uint256 constant rewardRate = 5;
+    uint256 public constant stakingDuration = 30 days;
 
     constructor(IERC20 token) {
         stakingToken = token;
@@ -62,12 +62,14 @@ contract StakingTrial is IStaking {
     function calculateReward(
         address stakerAddress
     ) public view returns (uint256) {
+        uint256 year = 365 days;
         Staker storage staker = stakers[stakerAddress];
         uint256 stakingTimeElapsed = block.timestamp - staker.lastStakedTime;
-        return
-            staker.totalStaked *
-            (stakingDuration / stakingTimeElapsed) *
-            rewardRate;
+        uint256 remainingRewards = (staker.totalStaked * rewardRate) / 100;
+        uint256 stakingTimeRate = (remainingRewards * stakingTimeElapsed) /
+            year;
+
+        return stakingTimeRate;
     }
 
     function claimReward() public {
