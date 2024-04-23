@@ -49,36 +49,53 @@ describe("Staking contract", function () {
     const { owner, staking, token, alice }: FixtureResult = await loadFixture(
       deployTokenFixture
     );
-    const amountStake = parseEther(10);
+    const amountStake = parseEther(100);
+    token.transfer(alice.address, parseEther(100));
+    await token
+      .connect(alice)
+      .approve(await staking.getAddress(), parseEther(1000));
+    await staking.connect(alice).stake(amountStake);
+    const [totalStaked, reward, lastStakedTime] = await staking.stakers(
+      alice.address
+    );
+    expect(totalStaked).equal(amountStake);
+  });
+
+  it("should allow user to unStake tokens", async () => {
+    const { owner, staking, token, alice }: FixtureResult = await loadFixture(
+      deployTokenFixture
+    );
+    const amountStake = parseEther(100);
+    const amountUnStake = parseEther(80);
     token.transfer(alice.address, parseEther(100));
     await token
       .connect(alice)
       .approve(await staking.getAddress(), parseEther(1000));
     await staking.connect(alice).stake(amountStake);
 
-    const blockBefore: Block | null = await ethers.provider.getBlock("latest");
-    if (blockBefore) await ethers.provider.send("evm_increaseTime", [5]); // Set the block time to the specified timestamp
+    // increase timestamp to unStake
+    await ethers.provider.send("evm_increaseTime", [86400 * 180]); // Set the block time to the specified timestamp
     await ethers.provider.send("evm_mine");
-    const blockAfter: Block | null = await ethers.provider.getBlock("latest");
-    // const [totalStaked, reward, lastStakedTime] = await staking.stakers(
-    //   alice.address
-    // );
 
-    const rewardToken = await staking.calculateReward(alice.address);
+    await staking.connect(alice).unStake(amountUnStake);
 
-    console.log({
-      rewardToken: ethers.formatEther(rewardToken),
-      blockAfter: blockAfter?.timestamp,
-      // lastStakedTime,
-    });
+    // const rewardToken = await staking.calculateReward(alice.address);
 
-    // const [totalStaked, reward, lastStakedTime] = await staking.stakers(
-    //   alice.address
-    // );
     // console.log({
-    //   totalStaked: totalStaked == amountStake,
-    //   reward,
-    //   lastStakedTime,
+    //   rewardToken: ethers.formatEther(rewardToken),
+    //   blockAfter: blockAfter?.timestamp,
     // });
+
+    const [totalStaked, reward, lastStakedTime] = await staking.stakers(
+      alice.address
+    );
+    const parseReward = parseFloat(ethers.formatEther(reward)).toFixed(4);
+    const expectReward = (
+      (parseFloat(ethers.formatEther(amountStake)) * 180 * 0.05) /
+      365
+    ).toFixed(4);
+
+    expect(totalStaked).equal(amountStake - amountUnStake);
+    expect(parseReward).equal(expectReward);
   });
 });
