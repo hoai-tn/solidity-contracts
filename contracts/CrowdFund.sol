@@ -20,6 +20,9 @@ contract CrowFund {
 
     struct Campaign {
         address creator;
+        string title;
+        string description;
+        string image;
         uint256 goal;
         // Total amount pledged
         uint256 pledged;
@@ -41,7 +44,14 @@ contract CrowFund {
         token = IERC20(_token);
     }
 
-    function launch(uint256 _goal, uint256 _startAt, uint256 _endAt) external {
+    function launch(
+        string memory _title,
+        string memory _description,
+        string memory _image,
+        uint256 _goal,
+        uint256 _startAt,
+        uint256 _endAt
+    ) external {
         require(_startAt < _endAt, "StartAt should less than EndAt");
         require(
             _startAt >= block.timestamp,
@@ -53,8 +63,11 @@ contract CrowFund {
         );
 
         count += 1;
-        campaigns[1] = Campaign({
+        campaigns[count] = Campaign({
             creator: msg.sender,
+            title: _title,
+            description: _description,
+            image: _image,
             goal: _goal,
             pledged: 0,
             startAt: _startAt,
