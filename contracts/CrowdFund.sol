@@ -3,6 +3,7 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "hardhat/console.sol";
 
 contract CrowFund {
     event Launch(
@@ -79,7 +80,7 @@ contract CrowFund {
     }
 
     function cancel(uint256 _campaign) external {
-        Campaign memory campaign = campaigns[_campaign];
+        Campaign storage campaign = campaigns[_campaign];
 
         require(campaign.creator == msg.sender, "Msg sender is not creator");
         // if campaign started, user can't cancel
@@ -90,10 +91,9 @@ contract CrowFund {
     }
 
     function pledge(uint256 _campaign, uint256 _amount) external {
-        Campaign memory campaign = campaigns[_campaign];
-
+        Campaign storage campaign = campaigns[_campaign];
         require(block.timestamp > campaign.startAt, "Campaign is not started");
-        require(block.timestamp >= campaign.endAt, "Campaign ended");
+        require(block.timestamp <= campaign.endAt, "Campaign ended");
 
         campaign.pledged += _amount;
         pledgedAmount[_campaign][msg.sender] += _amount;
@@ -104,7 +104,7 @@ contract CrowFund {
     }
 
     function unPledge(uint256 _campaign, uint256 _amount) external {
-        Campaign memory campaign = campaigns[_campaign];
+        Campaign storage campaign = campaigns[_campaign];
         require(campaign.endAt >= block.timestamp, "Campaign ended");
 
         campaign.pledged -= _amount;
@@ -116,9 +116,9 @@ contract CrowFund {
     }
 
     function claim(uint256 _campaign) external {
-        Campaign memory campaign = campaigns[_campaign];
+        Campaign storage campaign = campaigns[_campaign];
         require(campaign.creator == msg.sender, "Msg sender is not creator");
-        require(campaign.endAt > block.timestamp, "Campaign is not ended");
+        require(campaign.endAt < block.timestamp, "Campaign is not ended");
         require(campaign.pledged >= campaign.goal, "pledged < goal");
         require(!campaign.claimed, "claimed");
 
@@ -129,8 +129,8 @@ contract CrowFund {
     }
 
     function refund(uint256 _campaign) external {
-        Campaign memory campaign = campaigns[_campaign];
-        require(campaign.endAt > block.timestamp, "Campaign is not ended");
+        Campaign storage campaign = campaigns[_campaign];
+        require(campaign.endAt < block.timestamp, "Campaign is not ended");
         require(campaign.pledged < campaign.goal, "pledged >= goal");
 
         uint256 amount = pledgedAmount[_campaign][msg.sender];
