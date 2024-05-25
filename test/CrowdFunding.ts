@@ -1,4 +1,4 @@
-import { CrowFund, HDZ } from "../typechain-types";
+import { CrowdFunding, HDZ } from "../typechain-types";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
@@ -15,7 +15,7 @@ type FixtureResult = {
   alice: SignerWithAddress;
   bob: SignerWithAddress;
   carol: SignerWithAddress;
-  crowdFund: CrowFund;
+  crowdFund: CrowdFunding;
   token: HDZ;
 };
 
@@ -24,7 +24,7 @@ describe("CrowdFund contract", function () {
     // Get the Signers here.
     const [owner, alice, bob, carol]: SignerWithAddress[] =
       await ethers.getSigners();
-    let crowdFund: CrowFund;
+    let crowdFund: CrowdFunding;
     let token: HDZ;
     // To deploy our contract, we just have to call ethers.deployContract and await
     // its waitForDeployment() method, which happens once its transaction has been
@@ -33,7 +33,7 @@ describe("CrowdFund contract", function () {
     const Token = await ethers.getContractFactory("HDZ");
     token = await Token.deploy(owner.address);
 
-    const CrowdFund = await ethers.getContractFactory("CrowFund");
+    const CrowdFund = await ethers.getContractFactory("CrowdFunding");
     crowdFund = await CrowdFund.deploy(await token.getAddress());
 
     await crowdFund.waitForDeployment();
