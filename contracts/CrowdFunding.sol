@@ -5,7 +5,7 @@ pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 
-contract CrowFund {
+contract CrowdFunding {
     event Launch(
         uint256 id,
         address indexed creator,
