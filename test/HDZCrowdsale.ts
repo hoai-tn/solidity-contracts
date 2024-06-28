@@ -33,13 +33,13 @@ describe("HDZ Crowsale contract", function () {
     // its waitForDeployment() method, which happens once its transaction has been
     // mined.
 
-    const Token = await ethers.getContractFactory("HDZ");
+    const Token = await ethers.getContractFactory("CTC");
     token = await Token.deploy(owner.address);
 
     const USDT = await ethers.getContractFactory("USDT");
     usdt = await USDT.deploy(owner.address);
 
-    const Crowdsale = await ethers.getContractFactory("HDZCrowdsale");
+    const Crowdsale = await ethers.getContractFactory("CTCPresale");
     crowdsale = await Crowdsale.deploy(owner.address, 4000, 1, wallet, token);
 
     await crowdsale.waitForDeployment();
