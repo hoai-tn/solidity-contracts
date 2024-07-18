@@ -6,14 +6,14 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/extensions/AccessControlEnumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
-interface ISBC {
+interface ICTCK {
     function mint(
         address to,
         string memory tokenURI
     ) external returns (uint256);
 }
 
-contract SBC is ERC721Enumerable, Ownable, AccessControlEnumerable, ISBC {
+contract CTCK is ERC721Enumerable, Ownable, AccessControlEnumerable, ICTCK {
     uint256 private _tokenIdTracker;
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     mapping(uint256 tokenID => string) private _tokenURIs;
@@ -22,7 +22,7 @@ contract SBC is ERC721Enumerable, Ownable, AccessControlEnumerable, ISBC {
 
     constructor(
         address initOwner
-    ) ERC721("Shiba Inu Clever", "SBC") Ownable(initOwner) {
+    ) ERC721("Cat Cool kit", "CTCK") Ownable(initOwner) {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 

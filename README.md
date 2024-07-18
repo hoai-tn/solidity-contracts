@@ -13,3 +13,4 @@ npx hardhat ignition deploy ./ignition/modules/Lock.ts
 npm run deploy --network
 npm run verify --network --address $params
 ```
+https://gateway.pinata.cloud/ipfs/QmSuWiVRqM9XQSwbNnAdhkJ4AT5kVANkcNx8wMz7gL9Mfm

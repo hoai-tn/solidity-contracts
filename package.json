@@ -7,7 +7,7 @@
     "compile": "hardhat compile",
     "deploy": "hardhat run scripts/deploy.ts --network",
     "test": "hardhat test",
-    "verify": "hardhat verify --network"
+    "verify": "hardhat verify --network --contract"
   },
   "author": "",
   "license": "ISC",

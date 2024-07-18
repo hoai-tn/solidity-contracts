@@ -44,17 +44,17 @@ async function main() {
   // console.log("HDZCrowdsale address: ", hdzCrowdsaleAddress);
   // Config.setConfig(network + ".CTCPresale", hdzCrowdsaleAddress);
 
-  // const DOGX = await ethers.getContractFactory("DOGX");
-  // const dogX = await DOGX.deploy("0x6FeefDD0445Ded0f111BE915f775c8D41C361611");
-  // const dogXAddress = await dogX.getAddress();
-  // console.log("DOGX address: ", dogXAddress);
-  // Config.setConfig(network + ".DOGX", dogXAddress);
+  const DOGX = await ethers.getContractFactory("SBC");
+  const dogX = await DOGX.deploy("0x6FeefDD0445Ded0f111BE915f775c8D41C361611");
+  const dogXAddress = await dogX.getAddress();
+  console.log("CTCK address: ", dogXAddress);
+  Config.setConfig(network + ".SBC", dogXAddress);
 
-  const CrowdFund = await ethers.getContractFactory("CrowdFunding");
-  const crowdFund = await CrowdFund.deploy("0x3f18bc29773bb0e5129a7fbf1bb67fce1ac6b930");
-  const crowdFundAddress = await crowdFund.getAddress();
-  console.log("crowdFund address: ", crowdFundAddress);
-  Config.setConfig(network + ".CtcCrowdFunding", crowdFundAddress);
+  // const CrowdFund = await ethers.getContractFactory("CrowdFunding");
+  // const crowdFund = await CrowdFund.deploy("0x3f18bc29773bb0e5129a7fbf1bb67fce1ac6b930");
+  // const crowdFundAddress = await crowdFund.getAddress();
+  // console.log("crowdFund address: ", crowdFundAddress);
+  // Config.setConfig(network + ".CtcCrowdFunding", crowdFundAddress);
 
   await Config.updateConfig();
 }
